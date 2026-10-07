@@ -1,0 +1,1912 @@
+/* ==========================================================================
+   NEON RUNNER - Cyberpunk 3D Endless Runner Master Stylesheet
+   Pure CSS3D, Parallax Architecture, Neon CRT Scanlines & Visual Polish
+   ========================================================================== */
+
+:root {
+  --bg-void: #030108;
+  --bg-deep: #070312;
+  --bg-grid: #0d061f;
+  --neon-cyan: #00f0ff;
+  --neon-cyan-glow: rgba(0, 240, 255, 0.7);
+  --neon-cyan-faint: rgba(0, 240, 255, 0.15);
+  --neon-purple: #bc13fe;
+  --neon-purple-glow: rgba(188, 19, 254, 0.7);
+  --neon-purple-faint: rgba(188, 19, 254, 0.15);
+  --neon-magenta: #ff007f;
+  --neon-magenta-glow: rgba(255, 0, 127, 0.75);
+  --neon-yellow: #ffe600;
+  --neon-yellow-glow: rgba(255, 230, 0, 0.7);
+  --neon-red: #ff2255;
+  --neon-red-glow: rgba(255, 34, 85, 0.8);
+  --font-display: 'Orbitron', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, monospace;
+  --font-ui: 'Rajdhani', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  --ground-height: 120px;
+}
+
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  user-select: none;
+  -webkit-user-select: none;
+}
+
+html, body {
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  background-color: var(--bg-void);
+  font-family: var(--font-ui);
+  color: #fff;
+  touch-action: manipulation;
+}
+
+/* ==========================================================================
+   MASTER 3D VIEWPORT CONTAINER
+   ========================================================================== */
+.game-viewport {
+  position: relative;
+  width: 100vw;
+  height: 100vh;
+  overflow: hidden;
+  background: radial-gradient(circle at 50% 40%, #16082e 0%, var(--bg-deep) 60%, var(--bg-void) 100%);
+  perspective: 900px;
+  transform-style: preserve-3d;
+}
+
+/* ==========================================================================
+   CYBERPUNK PARALLAX SKYLINE (3+ LAYERS + 3D GROUND RUNWAY)
+   ========================================================================== */
+.skyline-system {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  overflow: hidden;
+  z-index: 1;
+}
+
+/* Sky layer: Cyber Moon & Starfield */
+.sky-layer {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 70%;
+  pointer-events: none;
+}
+
+.cyber-moon {
+  position: absolute;
+  top: 40px;
+  right: 15%;
+  width: 140px;
+  height: 140px;
+  border-radius: 50%;
+  background: linear-gradient(180deg, #ff007f 0%, #bc13fe 50%, #16082e 100%);
+  box-shadow: 0 0 50px var(--neon-magenta-glow), 0 0 100px var(--neon-purple-glow);
+  opacity: 0.85;
+}
+
+.cyber-moon::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  background: repeating-linear-gradient(
+    0deg,
+    transparent,
+    transparent 4px,
+    rgba(3, 1, 8, 0.8) 4px,
+    rgba(3, 1, 8, 0.8) 7px
+  );
+}
+
+.starfield {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  background-image: 
+    radial-gradient(1.5px 1.5px at 20px 30px, #00f0ff, rgba(0,0,0,0)),
+    radial-gradient(1px 1px at 140px 80px, #ff007f, rgba(0,0,0,0)),
+    radial-gradient(1.5px 1.5px at 280px 140px, #fff, rgba(0,0,0,0)),
+    radial-gradient(2px 2px at 450px 60px, #bc13fe, rgba(0,0,0,0)),
+    radial-gradient(1px 1px at 600px 190px, #00f0ff, rgba(0,0,0,0)),
+    radial-gradient(1.5px 1.5px at 750px 110px, #fff, rgba(0,0,0,0)),
+    radial-gradient(2px 2px at 900px 40px, #ff007f, rgba(0,0,0,0));
+  background-repeat: repeat;
+  background-size: 800px 300px;
+  opacity: 0.7;
+}
+
+/* Parallax Layer 1: Distant Arcologies (Slowest) */
+.parallax-layer {
+  position: absolute;
+  bottom: var(--ground-height);
+  left: 0;
+  width: 200%;
+  height: 100%;
+  will-change: transform;
+}
+
+.layer-far {
+  height: 65%;
+  opacity: 0.45;
+}
+
+.skyline-far-buildings {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 260px;
+  background: 
+    linear-gradient(to top, rgba(22, 8, 46, 0.95), transparent 95%),
+    repeating-linear-gradient(90deg, 
+      #080318 0px, #080318 45px, 
+      #0e0526 45px, #0e0526 95px,
+      transparent 95px, transparent 110px,
+      #050212 110px, #050212 180px,
+      transparent 180px, transparent 200px
+    );
+  mask-image: linear-gradient(to top, black 70%, transparent 100%);
+  -webkit-mask-image: linear-gradient(to top, black 70%, transparent 100%);
+}
+
+.distant-hologram-ads {
+  position: absolute;
+  bottom: 140px;
+  left: 0;
+  width: 100%;
+  display: flex;
+  gap: 320px;
+}
+
+.holo-billboard {
+  font-family: var(--font-display);
+  font-size: 13px;
+  font-weight: 800;
+  letter-spacing: 3px;
+  padding: 6px 14px;
+  border: 1px solid var(--neon-cyan);
+  color: var(--neon-cyan);
+  text-shadow: 0 0 10px var(--neon-cyan);
+  box-shadow: inset 0 0 15px var(--neon-cyan-faint), 0 0 15px var(--neon-cyan-faint);
+  background: rgba(0, 240, 255, 0.05);
+  animation: holoPulse 3s ease-in-out infinite alternate;
+}
+
+.holo-2 {
+  border-color: var(--neon-magenta);
+  color: var(--neon-magenta);
+  text-shadow: 0 0 10px var(--neon-magenta);
+  box-shadow: inset 0 0 15px var(--neon-magenta-glow);
+  animation-delay: 1.5s;
+}
+
+.holo-3 {
+  border-color: var(--neon-purple);
+  color: var(--neon-purple);
+  text-shadow: 0 0 10px var(--neon-purple);
+  animation-delay: 0.8s;
+}
+
+/* Parallax Layer 2: Midground Cyber Spire Towers */
+.layer-mid {
+  height: 50%;
+  opacity: 0.75;
+}
+
+.skyline-mid-towers {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 220px;
+  background: repeating-linear-gradient(90deg,
+    #13092b 0px, #13092b 60px,
+    transparent 60px, transparent 80px,
+    #1b0c3d 80px, #1b0c3d 160px,
+    transparent 160px, transparent 185px,
+    #0f0724 185px, #0f0724 250px,
+    transparent 250px, transparent 275px
+  );
+  box-shadow: 0 0 30px rgba(188, 19, 254, 0.2);
+}
+
+.skyline-mid-towers::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-image: repeating-linear-gradient(0deg,
+    transparent 0px, transparent 10px,
+    rgba(0, 240, 255, 0.4) 10px, rgba(0, 240, 255, 0.4) 12px
+  );
+  opacity: 0.35;
+}
+
+.highway-light-stream {
+  position: absolute;
+  bottom: 15px;
+  left: 0;
+  width: 100%;
+  height: 4px;
+  background: linear-gradient(90deg, 
+    transparent 0%,
+    var(--neon-cyan) 30%,
+    transparent 35%,
+    var(--neon-magenta) 70%,
+    transparent 100%
+  );
+  box-shadow: 0 0 12px var(--neon-cyan);
+}
+
+/* Parallax Layer 3: Near Industrial Pylons & Cables */
+.layer-near {
+  height: 40%;
+  opacity: 0.9;
+}
+
+.industrial-pylons {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 180px;
+  background-image: repeating-linear-gradient(90deg,
+    #210e47 0px, #210e47 16px,
+    transparent 16px, transparent 400px
+  );
+}
+
+.industrial-pylons::before {
+  content: '';
+  position: absolute;
+  top: 20px;
+  left: 0;
+  width: 100%;
+  height: 3px;
+  background: var(--neon-purple);
+  box-shadow: 0 0 10px var(--neon-purple-glow);
+}
+
+/* ==========================================================================
+   3D PERSPECTIVE GROUND RUNWAY (TRUE 3D DEPTH)
+   ========================================================================== */
+.ground-3d {
+  position: absolute;
+  bottom: 0;
+  left: -20%;
+  width: 140%;
+  height: var(--ground-height);
+  background: linear-gradient(180deg, #090214 0%, #030008 100%);
+  transform-origin: 50% 0%;
+  transform: perspective(400px) rotateX(45deg);
+  border-top: 3px solid var(--neon-cyan);
+  box-shadow: 0 -15px 40px var(--neon-cyan-glow), inset 0 20px 30px rgba(0, 240, 255, 0.2);
+  overflow: hidden;
+  z-index: 2;
+}
+
+.ground-grid-lines {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 200%;
+  height: 100%;
+  background-image: 
+    repeating-linear-gradient(90deg,
+      transparent 0px, transparent 75px,
+      rgba(0, 240, 255, 0.5) 75px, rgba(0, 240, 255, 0.5) 77px
+    ),
+    repeating-linear-gradient(0deg,
+      transparent 0px, transparent 35px,
+      rgba(188, 19, 254, 0.6) 35px, rgba(188, 19, 254, 0.6) 37px
+    );
+  will-change: transform;
+}
+
+.ground-speed-lasers {
+  position: absolute;
+  top: 50%;
+  left: 0;
+  width: 200%;
+  height: 4px;
+  background: repeating-linear-gradient(90deg,
+    var(--neon-magenta) 0px, var(--neon-magenta) 100px,
+    transparent 100px, transparent 220px
+  );
+  box-shadow: 0 0 15px var(--neon-magenta);
+}
+
+.ground-curb {
+  position: absolute;
+  top: 0;
+  height: 100%;
+  width: 12px;
+  background: repeating-linear-gradient(0deg,
+    var(--neon-yellow) 0px, var(--neon-yellow) 20px,
+    #000 20px, #000 40px
+  );
+  box-shadow: 0 0 10px var(--neon-yellow);
+}
+.curb-left { left: 10%; }
+.curb-right { right: 10%; }
+
+/* ==========================================================================
+   GAME CANVAS STAGE (FILTER TARGET FOR SLOW-MO FOCUS)
+   ========================================================================== */
+.game-canvas {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 5;
+  transition: filter 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+/* MANDATORY REQUIREMENT: Near-miss slowmo applies css filter: saturate(3) blur(1px) */
+.game-canvas.slow-mo {
+  filter: saturate(3) blur(1px);
+}
+
+#fxCanvas {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 3;
+}
+
+.obstacles-layer {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 4;
+}
+
+/* ==========================================================================
+   PLAYER ENTITY & NEON CYBER RUNNER
+   ========================================================================== */
+.player-entity {
+  position: absolute;
+  left: 120px;
+  bottom: var(--ground-height);
+  width: 52px;
+  height: 84px;
+  z-index: 10;
+  pointer-events: none;
+  transform-origin: 50% 100%;
+}
+
+/* Neon Motion Trail */
+.motion-trail-container {
+  display: none; /* Moved to high-performance fxCanvas particle engine for smooth trail */
+}
+
+/* Thruster flame */
+.thruster-emitter {
+  position: absolute;
+  bottom: 12px;
+  left: -12px;
+  width: 20px;
+  height: 14px;
+  transform: rotate(-25deg);
+}
+
+.thruster-flame {
+  width: 100%;
+  height: 100%;
+  background: radial-gradient(circle at 100% 50%, var(--neon-cyan) 0%, var(--neon-purple) 70%, transparent 100%);
+  border-radius: 50% 0 0 50%;
+  box-shadow: 0 0 12px var(--neon-cyan), 0 0 24px var(--neon-purple);
+  animation: thrusterFlicker 0.08s infinite alternate;
+}
+
+/* Articulated Cyber Runner Chassis */
+.runner-chassis {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  filter: drop-shadow(0 0 8px var(--neon-cyan)) drop-shadow(0 0 16px rgba(0, 240, 255, 0.4));
+}
+
+.runner-head {
+  position: absolute;
+  top: 2px;
+  left: 18px;
+  width: 22px;
+  height: 20px;
+  border-radius: 4px;
+  border: 2px solid var(--neon-cyan);
+  background: #09021c;
+  box-shadow: inset 0 0 6px var(--neon-cyan);
+}
+
+.runner-visor {
+  position: absolute;
+  top: 6px;
+  right: 0px;
+  width: 13px;
+  height: 6px;
+  background: var(--neon-magenta);
+  border-radius: 2px;
+  box-shadow: 0 0 10px var(--neon-magenta), 0 0 20px var(--neon-magenta);
+  animation: visorScan 1.2s infinite alternate;
+}
+
+.runner-crest {
+  position: absolute;
+  top: -6px;
+  left: 4px;
+  width: 12px;
+  height: 5px;
+  background: var(--neon-cyan);
+  clip-path: polygon(0 100%, 30% 0, 100% 0, 80% 100%);
+}
+
+.runner-torso {
+  position: absolute;
+  top: 22px;
+  left: 14px;
+  width: 25px;
+  height: 32px;
+  border: 2px solid var(--neon-cyan);
+  border-radius: 4px;
+  background: #0d0426;
+  transform: skewX(-6deg);
+}
+
+.energy-core {
+  position: absolute;
+  top: 8px;
+  left: 6px;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: var(--neon-cyan);
+  box-shadow: 0 0 12px var(--neon-cyan), 0 0 20px #fff;
+  animation: corePulse 0.8s infinite alternate;
+}
+
+.cyber-armor-plates {
+  position: absolute;
+  bottom: 3px;
+  left: 3px;
+  right: 3px;
+  height: 5px;
+  background: var(--neon-purple);
+  box-shadow: 0 0 6px var(--neon-purple);
+}
+
+/* Limbs */
+.runner-arm, .runner-leg {
+  position: absolute;
+  transform-origin: 50% 0%;
+}
+
+.arm-back {
+  top: 24px;
+  left: 10px;
+  width: 8px;
+  height: 24px;
+  border-left: 2px solid var(--neon-purple);
+  transform: rotate(25deg);
+}
+
+.arm-front {
+  top: 24px;
+  left: 24px;
+  width: 8px;
+  height: 24px;
+  border-right: 2px solid var(--neon-cyan);
+  transform: rotate(-35deg);
+}
+
+.leg-back {
+  top: 50px;
+  left: 14px;
+  width: 10px;
+  height: 34px;
+}
+
+.leg-front {
+  top: 50px;
+  left: 22px;
+  width: 10px;
+  height: 34px;
+}
+
+.cyber-limb.upper {
+  width: 4px;
+  height: 16px;
+  background: var(--neon-cyan);
+  box-shadow: 0 0 6px var(--neon-cyan);
+}
+
+.cyber-limb.lower {
+  width: 4px;
+  height: 16px;
+  background: var(--neon-purple);
+  box-shadow: 0 0 6px var(--neon-purple);
+  margin-top: 1px;
+}
+
+.cyber-foot {
+  width: 10px;
+  height: 4px;
+  background: var(--neon-magenta);
+  box-shadow: 0 0 6px var(--neon-magenta);
+  border-radius: 1px;
+}
+
+/* Shockwave Ring for double jump / near miss */
+.shockwave-ring {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 30px;
+  height: 30px;
+  border: 3px solid var(--neon-cyan);
+  border-radius: 50%;
+  transform: translate(-50%, -50%) scale(0);
+  box-shadow: 0 0 20px var(--neon-cyan);
+  opacity: 0;
+  pointer-events: none;
+}
+
+.shockwave-ring.pulse {
+  animation: shockwaveExpand 0.45s ease-out forwards;
+}
+
+/* Running Limb Dynamic Animations */
+.player-entity.running .arm-back {
+  animation: runArmBack 0.35s infinite ease-in-out alternate;
+}
+.player-entity.running .arm-front {
+  animation: runArmFront 0.35s infinite ease-in-out alternate;
+}
+.player-entity.running .leg-back {
+  animation: runLegBack 0.35s infinite ease-in-out alternate;
+}
+.player-entity.running .leg-front {
+  animation: runLegFront 0.35s infinite ease-in-out alternate;
+}
+
+.player-entity.jumping .arm-back {
+  transform: rotate(-35deg);
+}
+.player-entity.jumping .arm-front {
+  transform: rotate(40deg);
+}
+.player-entity.jumping .leg-back {
+  transform: rotate(30deg);
+}
+.player-entity.jumping .leg-front {
+  transform: rotate(-25deg);
+}
+
+@keyframes runArmBack {
+  0% { transform: rotate(35deg); }
+  100% { transform: rotate(-30deg); }
+}
+
+@keyframes runArmFront {
+  0% { transform: rotate(-40deg); }
+  100% { transform: rotate(30deg); }
+}
+
+@keyframes runLegBack {
+  0% { transform: rotate(-35deg); }
+  100% { transform: rotate(35deg); }
+}
+
+@keyframes runLegFront {
+  0% { transform: rotate(35deg); }
+  100% { transform: rotate(-35deg); }
+}
+
+/* ==========================================================================
+   OBSTACLE CLASSES (8 TOTAL ACROSS 4 LEVELS - HIGH-CONTRAST NEON HIGHLIGHTED)
+   ========================================================================== */
+
+.obstacles-layer {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 25;
+  overflow: visible;
+}
+
+.obstacle {
+  position: absolute;
+  left: 0;
+  bottom: var(--ground-height);
+  pointer-events: none;
+  will-change: transform;
+  transform-style: preserve-3d;
+  z-index: 25;
+}
+
+/* Level 1 - 1. Structural Block (SUPER HIGHLIGHTED: Cyber Hazard Monolith) */
+.obs-structural-block {
+  background: #0d021f;
+  border: 3px solid var(--neon-yellow);
+  box-shadow: 
+    0 0 25px var(--neon-yellow),
+    0 0 50px rgba(0, 240, 255, 0.8),
+    inset 0 0 20px rgba(255, 230, 0, 0.4);
+  border-radius: 6px 6px 0 0;
+  position: relative;
+  overflow: visible;
+}
+
+.obs-structural-block::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: repeating-linear-gradient(
+    -45deg,
+    rgba(0, 0, 0, 0.88) 0px, rgba(0, 0, 0, 0.88) 12px,
+    rgba(255, 230, 0, 0.95) 12px, rgba(255, 230, 0, 0.95) 24px
+  );
+  border-radius: 3px 3px 0 0;
+}
+
+.obs-structural-block::after {
+  content: '▲ DANGER ▲';
+  position: absolute;
+  top: -24px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: #ff0055;
+  color: #fff;
+  font-family: var(--font-display);
+  font-size: 10px;
+  font-weight: 900;
+  letter-spacing: 2px;
+  padding: 3px 8px;
+  border-radius: 4px;
+  border: 1px solid #fff;
+  box-shadow: 0 0 15px #ff0055, 0 0 25px var(--neon-yellow);
+  white-space: nowrap;
+  animation: hazardBeaconPulse 0.4s infinite alternate;
+}
+
+/* Level 1 - 2. Defence Pyramid (SUPER HIGHLIGHTED: Neon Magenta/Yellow Ramp Prism) */
+.obs-defence-pyramid {
+  background: linear-gradient(180deg, #ffe600 0%, #ff007f 60%, #00f0ff 100%);
+  clip-path: polygon(50% 0%, 0% 100%, 100% 100%);
+  -webkit-clip-path: polygon(50% 0%, 0% 100%, 100% 100%);
+  filter: drop-shadow(0 0 20px #ff007f) drop-shadow(0 0 35px var(--neon-cyan));
+  position: relative;
+  overflow: visible;
+}
+
+.obs-defence-pyramid::after {
+  content: '';
+  position: absolute;
+  top: 45%;
+  left: 50%;
+  width: 50%;
+  height: 50%;
+  background: #fff;
+  clip-path: polygon(50% 15%, 15% 90%, 85% 90%);
+  transform: translate(-50%, -35%);
+  box-shadow: 0 0 15px #fff, 0 0 25px var(--neon-yellow);
+  animation: pyramidBeacon 0.5s infinite alternate;
+}
+
+/* Level 2 - 3. Rotating Cube (3D Spinning polyhedral obstacle) */
+.obs-rotating-cube-container {
+  perspective: 400px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.obs-rotating-cube {
+  position: relative;
+  width: 48px;
+  height: 48px;
+  transform-style: preserve-3d;
+  animation: cubeSpin 3s linear infinite;
+}
+
+.cube-face {
+  position: absolute;
+  width: 48px;
+  height: 48px;
+  background: rgba(0, 240, 255, 0.12);
+  border: 2px solid var(--neon-cyan);
+  box-shadow: inset 0 0 10px var(--neon-cyan), 0 0 12px var(--neon-cyan-glow);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--font-display);
+  font-size: 10px;
+  color: var(--neon-cyan);
+}
+
+.face-front  { transform: translateZ(24px); }
+.face-back   { transform: rotateY(180deg) translateZ(24px); border-color: var(--neon-magenta); }
+.face-right  { transform: rotateY(90deg) translateZ(24px); }
+.face-left   { transform: rotateY(-90deg) translateZ(24px); border-color: var(--neon-purple); }
+.face-top    { transform: rotateX(90deg) translateZ(24px); }
+.face-bottom { transform: rotateX(-90deg) translateZ(24px); }
+
+/* Level 2 - 4. Seeker Drone (Flying at mid-height with scanning laser beam) */
+.obs-seeker-drone {
+  background: #0f0524;
+  border: 2px solid var(--neon-magenta);
+  border-radius: 8px 16px 8px 16px;
+  box-shadow: 0 0 15px var(--neon-magenta-glow);
+  position: relative;
+}
+
+.drone-eye {
+  position: absolute;
+  top: 50%;
+  left: 8px;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: var(--neon-red);
+  transform: translateY(-50%);
+  box-shadow: 0 0 12px var(--neon-red);
+  animation: dronePulse 0.4s infinite alternate;
+}
+
+.drone-scan-beam {
+  position: absolute;
+  top: 100%;
+  left: 50%;
+  width: 45px;
+  height: 110px;
+  transform: translateX(-50%);
+  background: linear-gradient(180deg, rgba(255, 34, 85, 0.6) 0%, transparent 100%);
+  clip-path: polygon(40% 0%, 60% 0%, 100% 100%, 0% 100%);
+  pointer-events: none;
+  animation: scanSweep 1s infinite alternate ease-in-out;
+}
+
+.drone-thruster {
+  position: absolute;
+  top: 50%;
+  right: -8px;
+  width: 8px;
+  height: 6px;
+  background: var(--neon-cyan);
+  border-radius: 0 50% 50% 0;
+  transform: translateY(-50%);
+  box-shadow: 0 0 10px var(--neon-cyan);
+}
+
+/* Level 3 - 5. Laser Gate (Two posts with a safe mid-gap) */
+.obs-laser-gate {
+  position: relative;
+}
+
+.laser-pylon {
+  position: absolute;
+  left: 0;
+  width: 100%;
+  background: linear-gradient(90deg, #1b0c3d, #3b1875);
+  border: 2px solid var(--neon-yellow);
+  box-shadow: 0 0 14px var(--neon-yellow);
+}
+
+.pylon-top {
+  top: 0;
+  border-bottom: 3px solid #fff;
+}
+
+.pylon-bottom {
+  bottom: 0;
+  border-top: 3px solid #fff;
+}
+
+.laser-beam-visual {
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 6px;
+  background: #fff;
+  box-shadow: 0 0 10px var(--neon-yellow), 0 0 25px var(--neon-yellow-glow);
+  animation: laserFlicker 0.1s infinite alternate;
+}
+
+.beam-top {
+  top: 0;
+}
+
+.beam-bottom {
+  bottom: 0;
+}
+
+.laser-gap-indicator {
+  position: absolute;
+  left: -20px;
+  width: 70px;
+  font-family: var(--font-display);
+  font-size: 8px;
+  color: var(--neon-cyan);
+  text-align: center;
+  letter-spacing: 1px;
+  text-shadow: 0 0 6px var(--neon-cyan);
+  pointer-events: none;
+  animation: gapBlink 0.6s infinite alternate;
+}
+
+/* Level 3 - 6. Surge Conduit (High-frequency electrified plasma barrier) */
+.obs-surge-conduit {
+  background: #0b0217;
+  border: 2px solid var(--neon-cyan);
+  border-radius: 4px;
+  box-shadow: 0 0 15px var(--neon-cyan-glow);
+  position: relative;
+  overflow: hidden;
+}
+
+.surge-core {
+  position: absolute;
+  top: 50%;
+  left: 0;
+  width: 100%;
+  height: 6px;
+  transform: translateY(-50%);
+  background: #fff;
+  box-shadow: 0 0 15px var(--neon-cyan), 0 0 30px var(--neon-purple);
+  animation: plasmaArc 0.12s infinite alternate;
+}
+
+.surge-spark {
+  position: absolute;
+  width: 4px;
+  height: 100%;
+  background: var(--neon-cyan);
+  box-shadow: 0 0 8px #fff;
+}
+
+/* Level 4 - 7. Glitch Shard (Shifts X-position unpredictably every 0.5s) */
+.obs-glitch-shard {
+  background: rgba(188, 19, 254, 0.35);
+  border: 2px solid var(--neon-cyan);
+  box-shadow: -4px 0 var(--neon-cyan), 4px 0 var(--neon-magenta), 0 0 20px var(--neon-purple-glow);
+  clip-path: polygon(25% 0%, 100% 15%, 80% 100%, 0% 85%);
+  animation: glitchJitter 0.15s infinite;
+  position: relative;
+}
+
+.obs-glitch-shard::before {
+  content: 'GLITCH';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-family: var(--font-display);
+  font-size: 9px;
+  font-weight: 900;
+  color: #fff;
+  text-shadow: 2px 0 var(--neon-magenta), -2px 0 var(--neon-cyan);
+}
+
+/* Level 4 - 8. Void Anomaly (Pulsating quantum singularity rift) */
+.obs-void-anomaly {
+  border-radius: 50%;
+  background: radial-gradient(circle, #000 40%, #1a0438 70%, var(--neon-purple) 100%);
+  box-shadow: 0 0 30px var(--neon-purple-glow), inset 0 0 15px var(--neon-cyan);
+  border: 2px dashed var(--neon-magenta);
+  animation: voidPulse 1.2s infinite ease-in-out alternate;
+  position: relative;
+}
+
+.void-ring {
+  position: absolute;
+  top: -8px;
+  left: -8px;
+  right: -8px;
+  bottom: -8px;
+  border-radius: 50%;
+  border: 2px solid var(--neon-cyan);
+  box-shadow: 0 0 15px var(--neon-cyan);
+  animation: voidSpin 2s linear infinite;
+}
+
+/* ==========================================================================
+   FLOATING TEXTS & NEAR MISS POPUPS
+   ========================================================================== */
+.floating-texts-container {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 20;
+}
+
+.floating-text {
+  position: absolute;
+  font-family: var(--font-display);
+  font-weight: 900;
+  font-size: 18px;
+  letter-spacing: 2px;
+  color: var(--neon-yellow);
+  text-shadow: 0 0 12px var(--neon-yellow), 0 0 25px var(--neon-magenta);
+  transform: translate(-50%, -50%);
+  pointer-events: none;
+  animation: floatUpFade 1.2s ease-out forwards;
+}
+
+.floating-text.bonus-huge {
+  font-size: 24px;
+  color: var(--neon-cyan);
+  text-shadow: 0 0 15px var(--neon-cyan), 0 0 30px #fff;
+}
+
+/* ==========================================================================
+   SCANLINE OVERLAY & CRT VIGNETTE
+   ========================================================================== */
+.scanline-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  background: repeating-linear-gradient(
+    0deg,
+    rgba(0, 0, 0, 0.3) 0px,
+    rgba(0, 0, 0, 0.3) 2px,
+    transparent 2px,
+    transparent 4px
+  );
+  opacity: 0.65;
+  z-index: 100;
+}
+
+.screen-vignette {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  box-shadow: inset 0 0 120px rgba(0, 0, 0, 0.85), inset 0 0 40px rgba(188, 19, 254, 0.25);
+  z-index: 101;
+}
+
+.crt-flicker {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  background: rgba(0, 240, 255, 0.015);
+  z-index: 102;
+  animation: screenFlicker 0.2s infinite;
+}
+
+/* ==========================================================================
+   NEON HUD (TOP-LEFT CORNER & TOP-RIGHT STATUS)
+   ========================================================================== */
+.neon-hud {
+  position: absolute;
+  top: 18px;
+  left: 20px;
+  right: 20px;
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  pointer-events: none;
+  z-index: 50;
+}
+
+.hud-left-panel {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  background: rgba(7, 3, 18, 0.75);
+  padding: 12px 18px;
+  border-radius: 8px;
+  border: 1px solid var(--neon-cyan-faint);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  box-shadow: 0 0 25px rgba(0, 240, 255, 0.15), inset 0 0 15px rgba(0, 0, 0, 0.5);
+  pointer-events: auto;
+}
+
+.hud-brand {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-family: var(--font-display);
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 2px;
+  color: var(--neon-cyan);
+  text-shadow: 0 0 8px var(--neon-cyan);
+}
+
+.hud-glyph {
+  color: var(--neon-magenta);
+  animation: glyphSpin 4s linear infinite;
+}
+
+.hud-stats-group {
+  display: flex;
+  gap: 20px;
+  align-items: center;
+}
+
+.stat-box {
+  display: flex;
+  flex-direction: column;
+}
+
+.stat-label {
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 1.5px;
+  color: #8b7ca8;
+}
+
+.stat-value {
+  font-family: var(--font-display);
+  font-size: 22px;
+  font-weight: 900;
+  letter-spacing: 1.5px;
+  color: #fff;
+  text-shadow: 0 0 10px var(--neon-cyan);
+}
+
+.stat-value-highlight {
+  font-family: var(--font-display);
+  font-size: 15px;
+  font-weight: 800;
+  color: var(--neon-yellow);
+  text-shadow: 0 0 10px var(--neon-yellow);
+  letter-spacing: 1px;
+  line-height: 26px;
+}
+
+/* Focus / Multiplier Meter */
+.focus-meter-wrapper {
+  margin-top: 4px;
+  width: 100%;
+}
+
+.focus-label-row {
+  display: flex;
+  justify-content: space-between;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 1px;
+  color: #bfa0dc;
+  margin-bottom: 3px;
+}
+
+.focus-mult {
+  color: var(--neon-cyan);
+  font-family: var(--font-display);
+  font-weight: 800;
+}
+
+.focus-track {
+  width: 100%;
+  height: 6px;
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 3px;
+  overflow: hidden;
+  border: 1px solid rgba(0, 240, 255, 0.3);
+}
+
+.focus-bar {
+  width: 0%;
+  height: 100%;
+  background: linear-gradient(90deg, var(--neon-purple), var(--neon-cyan), var(--neon-yellow));
+  box-shadow: 0 0 10px var(--neon-cyan);
+  transition: width 0.2s ease-out;
+}
+
+/* HUD Right Panel */
+.hud-right-panel {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  pointer-events: auto;
+}
+
+.speed-readout {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  background: rgba(7, 3, 18, 0.75);
+  padding: 8px 14px;
+  border-radius: 6px;
+  border: 1px solid rgba(255, 0, 127, 0.3);
+  backdrop-filter: blur(10px);
+}
+
+.speed-indicator {
+  font-size: 9px;
+  letter-spacing: 1.5px;
+  color: #ff70a6;
+  font-weight: 700;
+}
+
+.speed-num {
+  font-family: var(--font-display);
+  font-size: 16px;
+  font-weight: 800;
+  color: var(--neon-magenta);
+  text-shadow: 0 0 8px var(--neon-magenta);
+}
+
+.hud-btn {
+  background: rgba(13, 6, 31, 0.85);
+  border: 1px solid var(--neon-cyan);
+  color: var(--neon-cyan);
+  font-family: var(--font-display);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 1px;
+  padding: 8px 14px;
+  border-radius: 6px;
+  cursor: pointer;
+  box-shadow: 0 0 10px var(--neon-cyan-faint);
+  transition: all 0.2s ease;
+}
+
+.hud-btn:hover {
+  background: var(--neon-cyan);
+  color: #030008;
+  box-shadow: 0 0 20px var(--neon-cyan-glow);
+  transform: translateY(-1px);
+}
+
+.hud-btn:active {
+  transform: translateY(1px);
+}
+
+.hud-btn-music {
+  border-color: var(--neon-purple);
+  color: var(--neon-purple);
+}
+
+.hud-btn-music:hover {
+  background: var(--neon-purple);
+  color: #fff;
+  box-shadow: 0 0 20px var(--neon-purple-glow);
+}
+
+/* Mobile tap indicator */
+.mobile-tap-indicator {
+  position: absolute;
+  bottom: 25px;
+  left: 50%;
+  transform: translateX(-50%);
+  font-family: var(--font-display);
+  font-size: 11px;
+  letter-spacing: 1.5px;
+  color: rgba(255, 255, 255, 0.6);
+  text-shadow: 0 0 8px var(--neon-cyan);
+  pointer-events: none;
+  z-index: 60;
+  display: none;
+  animation: pulseIndicator 2s infinite ease-in-out;
+}
+
+@media (max-width: 768px) {
+  .mobile-tap-indicator {
+    display: block;
+  }
+}
+
+/* ==========================================================================
+   LEVEL UP FLASH OVERLAY
+   ========================================================================== */
+.level-up-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: radial-gradient(circle, rgba(0, 240, 255, 0.2) 0%, rgba(3, 1, 8, 0.85) 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 80;
+  transition: opacity 0.4s ease-out;
+  backdrop-filter: blur(4px);
+}
+
+.level-up-overlay.hidden {
+  display: none;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.level-up-box {
+  text-align: center;
+  padding: 30px 50px;
+  background: rgba(13, 6, 31, 0.95);
+  border: 2px solid var(--neon-yellow);
+  box-shadow: 0 0 50px var(--neon-yellow-glow), inset 0 0 30px rgba(255, 230, 0, 0.2);
+  border-radius: 8px;
+  position: relative;
+  animation: zoomLevelBanner 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+  max-width: 90vw;
+}
+
+.level-up-badge {
+  font-family: var(--font-display);
+  font-size: 12px;
+  font-weight: 800;
+  letter-spacing: 4px;
+  color: var(--neon-red);
+  text-shadow: 0 0 8px var(--neon-red);
+  margin-bottom: 8px;
+}
+
+.level-up-title {
+  font-family: var(--font-display);
+  font-size: 38px;
+  font-weight: 900;
+  letter-spacing: 4px;
+  color: #fff;
+  text-shadow: 0 0 20px var(--neon-cyan), 0 0 40px var(--neon-yellow);
+  margin-bottom: 12px;
+}
+
+.level-up-speed {
+  font-family: var(--font-display);
+  font-size: 16px;
+  font-weight: 800;
+  color: var(--neon-yellow);
+  letter-spacing: 2px;
+  margin-bottom: 8px;
+}
+
+.level-up-intel {
+  font-size: 16px;
+  color: #d1c4e9;
+  letter-spacing: 1px;
+}
+
+.level-up-scan-bar {
+  margin-top: 20px;
+  height: 4px;
+  width: 100%;
+  background: linear-gradient(90deg, transparent, var(--neon-yellow), transparent);
+  animation: scanBarSweep 1s infinite linear;
+}
+
+/* ==========================================================================
+   SCREENS & OVERLAYS (START SCREEN & GAME OVER SCREEN)
+   ========================================================================== */
+.overlay-screen {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 90;
+  background: rgba(3, 1, 8, 0.88);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  transition: opacity 0.35s ease, visibility 0.35s ease;
+  overflow-y: auto;
+  padding: 20px;
+}
+
+.overlay-screen.hidden {
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+}
+
+.modal-card {
+  background: rgba(11, 4, 26, 0.95);
+  border: 1px solid var(--neon-cyan);
+  border-radius: 12px;
+  box-shadow: 0 0 50px rgba(0, 240, 255, 0.25), inset 0 0 30px rgba(0, 240, 255, 0.05);
+  padding: 36px 40px;
+  max-width: 860px;
+  width: 100%;
+  position: relative;
+  animation: modalEnter 0.4s ease-out;
+}
+
+/* Glitch Title */
+.brand-header {
+  text-align: center;
+  margin-bottom: 24px;
+}
+
+.sub-header-tag {
+  font-family: var(--font-display);
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 3px;
+  color: var(--neon-magenta);
+  text-shadow: 0 0 8px var(--neon-magenta);
+  margin-bottom: 6px;
+}
+
+.glitch-title {
+  font-family: var(--font-display);
+  font-size: 54px;
+  font-weight: 900;
+  letter-spacing: 6px;
+  color: #fff;
+  text-shadow: 0 0 15px var(--neon-cyan), 0 0 30px var(--neon-purple);
+  position: relative;
+  display: inline-block;
+}
+
+.glitch-title::before, .glitch-title::after {
+  content: attr(data-text);
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  clip: rect(0, 0, 0, 0);
+}
+
+.glitch-title::before {
+  left: -2px;
+  text-shadow: -2px 0 var(--neon-magenta);
+  animation: glitchAnim1 2s infinite linear alternate-reverse;
+}
+
+.glitch-title::after {
+  left: 2px;
+  text-shadow: 2px 0 var(--neon-cyan);
+  animation: glitchAnim2 2.5s infinite linear alternate-reverse;
+}
+
+.tagline {
+  font-size: 14px;
+  letter-spacing: 3px;
+  color: #8b7ca8;
+  margin-top: 6px;
+}
+
+/* Mission Intel Panel Describing All 4 Levels */
+.mission-intel-panel {
+  background: rgba(6, 2, 16, 0.85);
+  border: 1px solid rgba(188, 19, 254, 0.4);
+  border-radius: 8px;
+  padding: 18px;
+  margin-bottom: 22px;
+}
+
+.intel-header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 14px;
+  border-bottom: 1px solid rgba(188, 19, 254, 0.25);
+  padding-bottom: 8px;
+}
+
+.intel-badge {
+  font-family: var(--font-display);
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 2px;
+  background: var(--neon-magenta);
+  color: #fff;
+  padding: 3px 8px;
+  border-radius: 3px;
+}
+
+.intel-sub {
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 2px;
+  color: #bfa0dc;
+}
+
+.levels-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 14px;
+}
+
+.level-card {
+  background: rgba(18, 8, 43, 0.7);
+  border: 1px solid rgba(0, 240, 255, 0.2);
+  border-radius: 6px;
+  padding: 12px;
+  transition: transform 0.2s, border-color 0.2s;
+}
+
+.level-card:hover {
+  transform: translateY(-2px);
+  border-color: var(--neon-cyan);
+}
+
+.level-card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 6px;
+}
+
+.lvl-tag {
+  font-size: 10px;
+  font-weight: 800;
+  color: #7b6ba0;
+}
+
+.lvl-name {
+  font-family: var(--font-display);
+  font-size: 13px;
+  font-weight: 800;
+  letter-spacing: 1px;
+  color: var(--neon-cyan);
+}
+
+.lvl-speed {
+  font-family: var(--font-display);
+  font-size: 10px;
+  font-weight: 800;
+  color: var(--neon-yellow);
+}
+
+.card-l2 .lvl-name { color: #a370f7; }
+.card-l3 .lvl-name { color: var(--neon-magenta); }
+.card-l4 .lvl-name { color: var(--neon-red); }
+
+.lvl-desc {
+  font-size: 12px;
+  color: #9d8db8;
+  margin-bottom: 8px;
+}
+
+.threat-list {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.threat-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 6px;
+  font-size: 12px;
+  color: #d1c4e9;
+}
+
+.threat-badge {
+  font-size: 12px;
+  line-height: 1;
+  color: var(--neon-cyan);
+}
+.cube-badge, .drone-badge { color: #a370f7; }
+.laser-badge, .surge-badge { color: var(--neon-yellow); }
+.glitch-badge, .void-badge { color: var(--neon-red); }
+
+/* Controls guide */
+.controls-guide {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  background: rgba(18, 8, 43, 0.6);
+  padding: 14px 18px;
+  border-radius: 8px;
+  margin-bottom: 24px;
+  border-left: 4px solid var(--neon-cyan);
+}
+
+.control-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  font-size: 13px;
+  color: #d1c4e9;
+  letter-spacing: 1px;
+}
+
+.key-cap {
+  background: #1e103f;
+  border: 1px solid var(--neon-cyan);
+  color: var(--neon-cyan);
+  font-family: var(--font-display);
+  font-size: 11px;
+  font-weight: 800;
+  padding: 3px 10px;
+  border-radius: 4px;
+  box-shadow: 0 0 6px var(--neon-cyan-faint);
+}
+
+.touch-cap {
+  background: #2b1154;
+  border: 1px solid var(--neon-magenta);
+  color: var(--neon-magenta);
+  font-size: 11px;
+  font-weight: 800;
+  padding: 3px 8px;
+  border-radius: 4px;
+}
+
+.highlight-item {
+  color: #fff;
+  background: rgba(255, 230, 0, 0.08);
+  padding: 6px 10px;
+  border-radius: 4px;
+  border: 1px dashed var(--neon-yellow);
+}
+
+.glow-icon {
+  color: var(--neon-yellow);
+  text-shadow: 0 0 8px var(--neon-yellow);
+}
+
+/* Buttons */
+.btn-cyber-primary {
+  width: 100%;
+  position: relative;
+  background: linear-gradient(90deg, #ff007f 0%, #bc13fe 50%, #00f0ff 100%);
+  border: none;
+  padding: 16px 28px;
+  cursor: pointer;
+  border-radius: 6px;
+  overflow: hidden;
+  box-shadow: 0 0 25px var(--neon-magenta-glow), 0 0 50px rgba(0, 240, 255, 0.3);
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+
+.btn-cyber-primary:hover {
+  transform: translateY(-2px) scale(1.01);
+  box-shadow: 0 0 35px var(--neon-magenta), 0 0 70px var(--neon-cyan);
+}
+
+.btn-cyber-primary:active {
+  transform: translateY(1px) scale(0.99);
+}
+
+.btn-text {
+  position: relative;
+  font-family: var(--font-display);
+  font-size: 18px;
+  font-weight: 900;
+  letter-spacing: 4px;
+  color: #fff;
+  text-shadow: 0 0 10px #000;
+  z-index: 2;
+}
+
+.btn-corner {
+  position: absolute;
+  width: 10px;
+  height: 10px;
+  border: 2px solid #fff;
+  z-index: 3;
+}
+.btn-corner.tl { top: 4px; left: 4px; border-right: none; border-bottom: none; }
+.btn-corner.br { bottom: 4px; right: 4px; border-left: none; border-top: none; }
+
+/* ==========================================================================
+   GAME OVER SCREEN STYLING
+   ========================================================================== */
+.game-over-card {
+  max-width: 620px;
+  border-color: var(--neon-red);
+  box-shadow: 0 0 60px var(--neon-red-glow), inset 0 0 30px rgba(255, 34, 85, 0.15);
+  text-align: center;
+}
+
+.game-over-alert {
+  margin-bottom: 24px;
+}
+
+.alert-icon {
+  font-size: 40px;
+  color: var(--neon-red);
+  text-shadow: 0 0 20px var(--neon-red);
+  animation: alertFlash 0.5s infinite alternate;
+}
+
+.fail-title {
+  font-family: var(--font-display);
+  font-size: 42px;
+  font-weight: 900;
+  letter-spacing: 5px;
+  color: var(--neon-red);
+  text-shadow: 0 0 20px var(--neon-red);
+  margin-top: 4px;
+}
+
+.fail-sub {
+  font-size: 13px;
+  letter-spacing: 3px;
+  color: #ff99aa;
+  margin-top: 4px;
+}
+
+.game-over-stats {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 14px;
+  margin-bottom: 28px;
+}
+
+.go-stat-card {
+  background: rgba(22, 6, 31, 0.8);
+  border: 1px solid rgba(255, 34, 85, 0.3);
+  padding: 14px;
+  border-radius: 8px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  position: relative;
+}
+
+.go-stat-label {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 1.5px;
+  color: #b898be;
+  margin-bottom: 4px;
+}
+
+.go-stat-val {
+  font-family: var(--font-display);
+  font-size: 24px;
+  font-weight: 900;
+  color: #fff;
+  text-shadow: 0 0 10px var(--neon-cyan);
+}
+
+.new-record-badge {
+  position: absolute;
+  top: -8px;
+  background: var(--neon-yellow);
+  color: #000;
+  font-family: var(--font-display);
+  font-size: 9px;
+  font-weight: 900;
+  padding: 2px 8px;
+  border-radius: 10px;
+  box-shadow: 0 0 10px var(--neon-yellow);
+  letter-spacing: 1px;
+}
+
+.new-record-badge.hidden {
+  display: none;
+}
+
+.btn-restart {
+  background: linear-gradient(90deg, #ff2255 0%, #bc13fe 50%, #00f0ff 100%);
+  box-shadow: 0 0 25px var(--neon-red-glow);
+}
+
+.btn-restart:hover {
+  box-shadow: 0 0 40px var(--neon-red), 0 0 60px var(--neon-cyan);
+}
+
+/* ==========================================================================
+   ANIMATIONS & KEYFRAMES
+   ========================================================================== */
+@keyframes holoPulse {
+  0% { opacity: 0.5; filter: drop-shadow(0 0 5px var(--neon-cyan)); }
+  100% { opacity: 0.95; filter: drop-shadow(0 0 15px var(--neon-cyan)); }
+}
+
+@keyframes thrusterFlicker {
+  0% { transform: scaleX(0.85) scaleY(0.9); opacity: 0.8; }
+  100% { transform: scaleX(1.2) scaleY(1.1); opacity: 1; }
+}
+
+@keyframes visorScan {
+  0% { opacity: 0.7; transform: translateX(-2px); }
+  100% { opacity: 1; transform: translateX(2px); }
+}
+
+@keyframes corePulse {
+  0% { transform: scale(0.9); opacity: 0.8; }
+  100% { transform: scale(1.15); opacity: 1; }
+}
+
+@keyframes shockwaveExpand {
+  0% { transform: translate(-50%, -50%) scale(0.2); opacity: 1; }
+  100% { transform: translate(-50%, -50%) scale(3.5); opacity: 0; }
+}
+
+@keyframes pyramidBeacon {
+  0% { opacity: 0.4; }
+  100% { opacity: 1; filter: drop-shadow(0 0 8px var(--neon-yellow)); }
+}
+
+@keyframes hazardBeaconPulse {
+  0% { transform: translateX(-50%) scale(0.95); opacity: 0.85; }
+  100% { transform: translateX(-50%) scale(1.08); opacity: 1; box-shadow: 0 0 20px #ff0055, 0 0 35px var(--neon-yellow); }
+}
+
+@keyframes cubeSpin {
+  0% { transform: rotateX(0deg) rotateY(0deg) rotateZ(0deg); }
+  100% { transform: rotateX(360deg) rotateY(360deg) rotateZ(360deg); }
+}
+
+@keyframes dronePulse {
+  0% { transform: translateY(-50%) scale(0.8); }
+  100% { transform: translateY(-50%) scale(1.2); }
+}
+
+@keyframes scanSweep {
+  0% { transform: translateX(-50%) rotate(-12deg); opacity: 0.4; }
+  100% { transform: translateX(-50%) rotate(12deg); opacity: 0.8; }
+}
+
+@keyframes laserFlicker {
+  0% { opacity: 0.75; }
+  100% { opacity: 1; }
+}
+
+@keyframes gapBlink {
+  0% { opacity: 0.4; transform: translateY(-2px); }
+  100% { opacity: 1; transform: translateY(2px); }
+}
+
+@keyframes plasmaArc {
+  0% { transform: translateY(-50%) scaleY(0.8); opacity: 0.8; }
+  100% { transform: translateY(-50%) scaleY(1.4); opacity: 1; }
+}
+
+@keyframes glitchJitter {
+  0% { transform: translate(0, 0); }
+  25% { transform: translate(-3px, 2px); }
+  50% { transform: translate(2px, -2px); }
+  75% { transform: translate(-2px, -1px); }
+  100% { transform: translate(0, 0); }
+}
+
+@keyframes voidPulse {
+  0% { transform: scale(0.9); }
+  100% { transform: scale(1.12); }
+}
+
+@keyframes voidSpin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+@keyframes floatUpFade {
+  0% { opacity: 0; transform: translate(-50%, 0) scale(0.7); }
+  20% { opacity: 1; transform: translate(-50%, -20px) scale(1.15); }
+  80% { opacity: 1; transform: translate(-50%, -45px) scale(1); }
+  100% { opacity: 0; transform: translate(-50%, -60px) scale(0.85); }
+}
+
+@keyframes screenFlicker {
+  0% { opacity: 0.98; }
+  50% { opacity: 1; }
+  100% { opacity: 0.99; }
+}
+
+@keyframes glyphSpin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+@keyframes pulseIndicator {
+  0%, 100% { opacity: 0.4; }
+  50% { opacity: 1; }
+}
+
+@keyframes zoomLevelBanner {
+  0% { transform: scale(0.7); opacity: 0; }
+  100% { transform: scale(1); opacity: 1; }
+}
+
+@keyframes scanBarSweep {
+  0% { transform: translateX(-100%); }
+  100% { transform: translateX(100%); }
+}
+
+@keyframes modalEnter {
+  0% { opacity: 0; transform: scale(0.92) translateY(20px); }
+  100% { opacity: 1; transform: scale(1) translateY(0); }
+}
+
+@keyframes alertFlash {
+  0% { opacity: 0.4; }
+  100% { opacity: 1; }
+}
+
+@keyframes glitchAnim1 {
+  0% { clip: rect(20px, 9999px, 40px, 0); }
+  20% { clip: rect(60px, 9999px, 80px, 0); }
+  40% { clip: rect(10px, 9999px, 30px, 0); }
+  60% { clip: rect(70px, 9999px, 90px, 0); }
+  80% { clip: rect(35px, 9999px, 50px, 0); }
+  100% { clip: rect(0, 0, 0, 0); }
+}
+
+@keyframes glitchAnim2 {
+  0% { clip: rect(40px, 9999px, 60px, 0); }
+  25% { clip: rect(10px, 9999px, 30px, 0); }
+  50% { clip: rect(80px, 9999px, 95px, 0); }
+  75% { clip: rect(25px, 9999px, 45px, 0); }
+  100% { clip: rect(0, 0, 0, 0); }
+}
+
+/* ==========================================================================
+   RESPONSIVE DESIGN (MOBILE & TABLETS)
+   ========================================================================== */
+@media (max-width: 900px) {
+  .levels-grid {
+    grid-template-columns: 1fr;
+  }
+  
+  .glitch-title {
+    font-size: 38px;
+  }
+  
+  .modal-card {
+    padding: 24px;
+  }
+
+  .hud-stats-group {
+    gap: 12px;
+  }
+
+  .stat-value {
+    font-size: 18px;
+  }
+}
+
+@media (max-width: 600px) {
+  .player-entity {
+    left: 40px;
+  }
+
+  .neon-hud {
+    top: 10px;
+    left: 10px;
+    right: 10px;
+  }
+
+  .hud-left-panel {
+    padding: 8px 12px;
+  }
+
+  .stat-best {
+    display: none;
+  }
+
+  .btn-cyber-primary .btn-text {
+    font-size: 15px;
+    letter-spacing: 2px;
+  }
+}

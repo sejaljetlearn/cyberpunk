@@ -1,0 +1,351 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>NEON RUNNER | 3D Cyberpunk Endless Runner</title>
+  <meta name="description" content="Experience Neon Runner, an adrenaline-fueled 3D cyberpunk endless runner featuring CSS 3D perspective, parallax skyline, near-miss slow-mo focus, and 8 unique obstacle classes across 4 sectors.">
+  <link rel="stylesheet" href="style.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;600;800;900&family=Rajdhani:wght@500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+  <!-- Master Game Viewport Container with 3D Perspective -->
+  <main id="gameViewport" class="game-viewport">
+    
+    <!-- Cyberpunk 3D Parallax Skyline Layers -->
+    <div id="skylineSystem" class="skyline-system">
+      <!-- Deep Void Sky & Synth Cyber Moon -->
+      <div class="sky-layer">
+        <div class="cyber-moon"></div>
+        <div class="cyber-grid-sun-rays"></div>
+        <div class="starfield"></div>
+      </div>
+
+      <!-- Parallax Layer 1: Colossal Arcologies & Distant Megacity (Slowest) -->
+      <div id="bgLayer1" class="parallax-layer layer-far">
+        <div class="skyline-far-buildings"></div>
+        <div class="distant-hologram-ads">
+          <span class="holo-billboard holo-1">CYBER_SYS // 2099</span>
+          <span class="holo-billboard holo-2">NEURAL_LINK : ACTIVE</span>
+          <span class="holo-billboard holo-3">SYNTH_WAVE</span>
+        </div>
+      </div>
+
+      <!-- Parallax Layer 2: Midground Cyber Spire Towers with Neon Windows & Conduits -->
+      <div id="bgLayer2" class="parallax-layer layer-mid">
+        <div class="skyline-mid-towers"></div>
+        <div class="highway-light-stream"></div>
+      </div>
+
+      <!-- Parallax Layer 3: Near Industrial Trusses & Neon Overhead Pylons -->
+      <div id="bgLayer3" class="parallax-layer layer-near">
+        <div class="industrial-pylons"></div>
+      </div>
+
+      <!-- 3D Perspective Ground Grid Highway (Vanishing Point Runway) -->
+      <div id="ground3D" class="ground-3d">
+        <div class="ground-grid-lines"></div>
+        <div class="ground-speed-lasers"></div>
+        <div class="ground-curb curb-left"></div>
+        <div class="ground-curb curb-right"></div>
+      </div>
+    </div>
+
+    <!-- Main Game Canvas Stage (Target for CSS Filter slow-mo: saturate(3) blur(1px)) -->
+    <div id="gameCanvas" class="game-canvas">
+      
+      <!-- Particle FX & Trail Canvas for High-Speed Visuals -->
+      <canvas id="fxCanvas"></canvas>
+
+      <!-- Dynamic Obstacles Layer (DOM elements with 3D CSS Classes) -->
+      <div id="obstaclesLayer" class="obstacles-layer"></div>
+
+      <!-- Player Neon Cyber Runner Container -->
+      <div id="player" class="player-entity">
+        <!-- Motion Trail Container -->
+        <div id="playerMotionTrail" class="motion-trail-container"></div>
+
+        <!-- Jet Boost Thruster FX -->
+        <div class="thruster-emitter">
+          <div class="thruster-flame"></div>
+          <div class="thruster-sparks"></div>
+        </div>
+
+        <!-- Articulated Neon Runner Figure -->
+        <div class="runner-chassis">
+          <div class="runner-head">
+            <div class="runner-visor"></div>
+            <div class="runner-crest"></div>
+          </div>
+          <div class="runner-torso">
+            <div class="energy-core"></div>
+            <div class="cyber-armor-plates"></div>
+          </div>
+          <div class="runner-arm arm-back">
+            <div class="cyber-limb"></div>
+          </div>
+          <div class="runner-arm arm-front">
+            <div class="cyber-limb"></div>
+          </div>
+          <div class="runner-leg leg-back">
+            <div class="cyber-limb upper"></div>
+            <div class="cyber-limb lower"></div>
+            <div class="cyber-foot"></div>
+          </div>
+          <div class="runner-leg leg-front">
+            <div class="cyber-limb upper"></div>
+            <div class="cyber-limb lower"></div>
+            <div class="cyber-foot"></div>
+          </div>
+        </div>
+
+        <!-- Shockwave Pulse Ring (Triggered on Double Jump / Near-Miss) -->
+        <div class="shockwave-ring" id="playerShockwave"></div>
+      </div>
+
+      <!-- Floating Text Container for Near Misses & Score Popups -->
+      <div id="floatingTexts" class="floating-texts-container"></div>
+    </div>
+
+    <!-- Scanline Overlay & Screen Vignette Glow -->
+    <div class="scanline-overlay"></div>
+    <div class="screen-vignette"></div>
+    <div class="crt-flicker"></div>
+
+    <!-- Neon Cyberpunk HUD (Top-Left Corner & Controls) -->
+    <header id="neonHud" class="neon-hud">
+      <div class="hud-left-panel">
+        <div class="hud-brand">
+          <span class="hud-glyph">◈</span>
+          <span class="hud-title">NEON_RUNNER // OS v4.2</span>
+        </div>
+        
+        <div class="hud-stats-group">
+          <div class="stat-box stat-score">
+            <span class="stat-label">SCORE</span>
+            <span id="scoreVal" class="stat-value">000000</span>
+          </div>
+          <div class="stat-box stat-best">
+            <span class="stat-label">BEST RECORD</span>
+            <span id="bestVal" class="stat-value">000000</span>
+          </div>
+          <div class="stat-box stat-level">
+            <span class="stat-label">SECTOR</span>
+            <span id="levelVal" class="stat-value-highlight">L1 : NEON CITY</span>
+          </div>
+        </div>
+
+        <!-- Focus / Multiplier Meter -->
+        <div class="focus-meter-wrapper">
+          <div class="focus-label-row">
+            <span class="focus-label">NEURAL SYNC (NEAR-MISSES: <strong id="nearMissCounter">0</strong>)</span>
+            <span id="focusMultiplier" class="focus-mult">1.0x</span>
+          </div>
+          <div class="focus-track">
+            <div id="focusBar" class="focus-bar"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Top Right Actions & Status -->
+      <div class="hud-right-panel">
+        <div class="speed-readout">
+          <span class="speed-indicator">VELOCITY</span>
+          <span id="speedVal" class="speed-num">1.00x</span>
+        </div>
+        <button id="btnAudioToggle" class="hud-btn" title="Toggle Synth Audio" aria-label="Toggle Sound">
+          <span id="audioIcon">🔊 AUDIO: ON</span>
+        </button>
+        <button id="btnMusicTrack" class="hud-btn hud-btn-music" title="Toggle Synthwave Music" aria-label="Toggle Music">
+          <span id="musicIcon">🎵 BGM: ON</span>
+        </button>
+      </div>
+    </header>
+
+    <!-- Interactive Touch Control Prompt for Mobile/Touchscreens -->
+    <div class="mobile-tap-indicator" id="mobileTapIndicator">
+      <span>TAP SCREEN TO JUMP / DOUBLE TAP TO DOUBLE JUMP</span>
+    </div>
+
+    <!-- Level-Up Flash Overlay -->
+    <div id="levelUpOverlay" class="level-up-overlay hidden">
+      <div class="level-up-box">
+        <div class="level-up-badge">SECTOR SHIFT DETECTED</div>
+        <h2 id="levelUpTitle" class="level-up-title">SECTOR 02: THE GRID</h2>
+        <div id="levelUpSpeed" class="level-up-speed">VELOCITY INCREASED: +20%</div>
+        <p id="levelUpIntel" class="level-up-intel">NEW THREATS DETECTED: Rotating Cubes & Seeker Drones</p>
+        <div class="level-up-scan-bar"></div>
+      </div>
+    </div>
+
+    <!-- Start Screen Overlay -->
+    <section id="startScreen" class="overlay-screen screen-active">
+      <div class="modal-card start-card">
+        <div class="brand-header">
+          <div class="sub-header-tag">NEURAL INTERFACE TERMINAL // INITIALIZE</div>
+          <h1 class="glitch-title" data-text="NEON RUNNER">NEON RUNNER</h1>
+          <p class="tagline">3D CYBERPUNK ENDLESS RUNNER // HIGH-VELOCITY SURVIVAL</p>
+        </div>
+
+        <!-- Mission Intel Panel Describing All 4 Levels and Obstacles -->
+        <div class="mission-intel-panel">
+          <div class="intel-header">
+            <span class="intel-badge">MISSION INTEL</span>
+            <span class="intel-sub">SECTOR DATABASE & THREAT PROFILES</span>
+          </div>
+
+          <div class="levels-grid">
+            <!-- Level 1 Intel -->
+            <div class="level-card card-l1">
+              <div class="level-card-header">
+                <span class="lvl-tag">LEVEL 01</span>
+                <span class="lvl-name">NEON CITY</span>
+                <span class="lvl-speed">1.0x SPEED</span>
+              </div>
+              <p class="lvl-desc">Cyberpunk street-level test track. Low atmospheric resistance.</p>
+              <div class="threat-list">
+                <div class="threat-item">
+                  <span class="threat-badge block-badge">▪</span>
+                  <span><strong>Structural Blocks:</strong> Monolithic concrete cyber-barriers.</span>
+                </div>
+                <div class="threat-item">
+                  <span class="threat-badge ramp-badge">▲</span>
+                  <span><strong>Defence Pyramids:</strong> High-angle neon hazard prisms.</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- Level 2 Intel -->
+            <div class="level-card card-l2">
+              <div class="level-card-header">
+                <span class="lvl-tag">LEVEL 02</span>
+                <span class="lvl-name">THE GRID</span>
+                <span class="lvl-speed">+20% SPEED</span>
+              </div>
+              <p class="lvl-desc">Virtual cyberspace infrastructure with spatial geometry anomalies.</p>
+              <div class="threat-list">
+                <div class="threat-item">
+                  <span class="threat-badge cube-badge">▰</span>
+                  <span><strong>Rotating Cubes:</strong> 3D spinning polyhedral obstacles.</span>
+                </div>
+                <div class="threat-item">
+                  <span class="threat-badge drone-badge">◆</span>
+                  <span><strong>Seeker Drones:</strong> Mid-altitude bobbing surveillance drones.</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- Level 3 Intel -->
+            <div class="level-card card-l3">
+              <div class="level-card-header">
+                <span class="lvl-tag">LEVEL 03</span>
+                <span class="lvl-name">HYPER DRIVE</span>
+                <span class="lvl-speed">+40% SPEED</span>
+              </div>
+              <p class="lvl-desc">High-voltage accelerator conduit. Faster spawn frequency.</p>
+              <div class="threat-list">
+                <div class="threat-item">
+                  <span class="threat-badge laser-badge">⚡</span>
+                  <span><strong>Laser Gates:</strong> Dual posts with safe passage mid-gap. Time your leap!</span>
+                </div>
+                <div class="threat-item">
+                  <span class="threat-badge surge-badge">≋</span>
+                  <span><strong>Surge Conduits:</strong> High-frequency electrified plasma rails.</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- Level 4 Intel -->
+            <div class="level-card card-l4">
+              <div class="level-card-header">
+                <span class="lvl-tag">LEVEL 04</span>
+                <span class="lvl-name">THE VOID</span>
+                <span class="lvl-speed">+60% SPEED</span>
+              </div>
+              <p class="lvl-desc">Quantum singularity sector. Maximum obstacle density.</p>
+              <div class="threat-list">
+                <div class="threat-item">
+                  <span class="threat-badge glitch-badge">░</span>
+                  <span><strong>Glitch Shards:</strong> Quantum shards that shift X-position every 0.5s!</span>
+                </div>
+                <div class="threat-item">
+                  <span class="threat-badge void-badge">◎</span>
+                  <span><strong>Void Anomalies:</strong> Pulsating gravitational singularity rifts.</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Controls Guide & Near Miss Feature -->
+        <div class="controls-guide">
+          <div class="control-item">
+            <kbd class="key-cap">SPACE</kbd> or <span class="touch-cap">TAP</span>
+            <span>JUMP / HOLD TO ASCEND</span>
+          </div>
+          <div class="control-item">
+            <kbd class="key-cap">SPACE</kbd> (in air)
+            <span>DOUBLE JUMP (RESETS ON LANDING)</span>
+          </div>
+          <div class="control-item highlight-item">
+            <span class="glow-icon">★</span>
+            <span><strong>NEAR-MISS SYSTEM:</strong> Graze within 12px of obstacles to trigger <strong>Slow-Mo Focus (1.5s)</strong> + <strong>+50 Score Bonus</strong>!</span>
+          </div>
+        </div>
+
+        <!-- Action Button -->
+        <button id="btnStartGame" class="btn-cyber-primary" type="button">
+          <span class="btn-glitch-overlay"></span>
+          <span class="btn-text">ENGAGE NEURAL LINK</span>
+          <span class="btn-corner tl"></span>
+          <span class="btn-corner br"></span>
+        </button>
+      </div>
+    </section>
+
+    <!-- Game Over Screen Overlay -->
+    <section id="gameOverScreen" class="overlay-screen hidden">
+      <div class="modal-card game-over-card">
+        <div class="game-over-alert">
+          <div class="alert-icon">⚠</div>
+          <h2 class="fail-title" data-text="SYSTEM FAILURE">SYSTEM FAILURE</h2>
+          <div class="fail-sub">MEMORY CLEARED // NEURAL LINK SEVERED</div>
+        </div>
+
+        <!-- Summary Stats Grid -->
+        <div class="game-over-stats">
+          <div class="go-stat-card">
+            <span class="go-stat-label">FINAL SCORE</span>
+            <span id="finalScoreVal" class="go-stat-val">000000</span>
+          </div>
+          <div class="go-stat-card">
+            <span class="go-stat-label">BEST RECORD</span>
+            <span id="bestRecordVal" class="go-stat-val">000000</span>
+            <span id="newRecordBadge" class="new-record-badge hidden">NEW HIGH SCORE!</span>
+          </div>
+          <div class="go-stat-card">
+            <span class="go-stat-label">MAX SECTOR REACHED</span>
+            <span id="finalSectorVal" class="go-stat-val">LEVEL 1</span>
+          </div>
+          <div class="go-stat-card">
+            <span class="go-stat-label">NEAR-MISS GRAZES</span>
+            <span id="finalNearMissVal" class="go-stat-val">0 (+0 PTS)</span>
+          </div>
+        </div>
+
+        <button id="btnRestartGame" class="btn-cyber-primary btn-restart" type="button">
+          <span class="btn-glitch-overlay"></span>
+          <span class="btn-text">RESTORE BACKUP // REBOOT</span>
+          <span class="btn-corner tl"></span>
+          <span class="btn-corner br"></span>
+        </button>
+      </div>
+    </section>
+
+  </main>
+
+  <script src="game.js"></script>
+</body>
+</html>
